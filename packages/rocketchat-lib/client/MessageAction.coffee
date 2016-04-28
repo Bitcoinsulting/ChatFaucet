@@ -12,7 +12,7 @@ RocketChat.MessageAction = new class
 	###
 	addButton = (config) ->
 		unless config?.id
-			throw new Meteor.Error "MessageAction-addButton-error", "Button id was not informed."
+			return false
 
 		Tracker.nonreactive ->
 			btns = buttons.get()
@@ -134,5 +134,34 @@ Meteor.startup ->
 					chatMessages[Session.get('openedRoom')].clearEditing(message)
 				chatMessages[Session.get('openedRoom')].deleteMsg(message)
 		validation: (message) ->
-			return RocketChat.authz.hasAtLeastOnePermission('delete-message', message.rid ) or RocketChat.settings.get('Message_AllowDeleting') and message.u?._id is Meteor.userId()
+			hasPermission = RocketChat.authz.hasAtLeastOnePermission('delete-message', message.rid)
+			isDeleteAllowed = RocketChat.settings.get 'Message_AllowDeleting'
+			deleteOwn = message.u?._id is Meteor.userId()
+
+			return unless hasPermission or (isDeleteAllowed and deleteOwn)
+
+			blockDeleteInMinutes = RocketChat.settings.get 'Message_AllowDeleting_BlockDeleteInMinutes'
+			if blockDeleteInMinutes? and blockDeleteInMinutes isnt 0
+				msgTs = moment(message.ts) if message.ts?
+				currentTsDiff = moment().diff(msgTs, 'minutes') if msgTs?
+				return currentTsDiff < blockDeleteInMinutes
+			else
+				return true
 		order: 2
+
+	RocketChat.MessageAction.addButton
+		id: 'permalink'
+		icon: 'icon-link'
+		i18nLabel: 'Permalink'
+		classes: 'clipboard'
+		context: [
+			'message'
+			'message-mobile'
+		]
+		action: (event, instance) ->
+			message = @_arguments[1]
+			msg = $(event.currentTarget).closest('.message')[0]
+			$("\##{msg.id} .message-dropdown").hide()
+			$(event.currentTarget).attr('data-clipboard-text', document.location.origin + document.location.pathname + '?msg=' + msg.id);
+			toastr.success(TAPi18n.__('Copied'))
+		order: 3

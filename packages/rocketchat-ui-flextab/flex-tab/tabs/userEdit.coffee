@@ -1,40 +1,51 @@
-Template.adminUserEdit.helpers
+Template.userEdit.helpers
 	canEditOrAdd: ->
 		return (Template.instance().user and RocketChat.authz.hasAtLeastOnePermission('edit-other-user-info')) or (not Template.instance().user and RocketChat.authz.hasAtLeastOnePermission('create-user'))
 
 	user: ->
 		return Template.instance().user
 
-Template.adminUserEdit.events
+	requirePasswordChange: ->
+		return !Template.instance().user || Template.instance().user.requirePasswordChange
+
+Template.userEdit.events
 	'click .cancel': (e, t) ->
 		e.stopPropagation()
 		e.preventDefault()
-		t.cancel()
+		t.cancel(t.find('form'))
 
-	'click .save': (e, t) ->
+	'click #randomPassword': (e, t) ->
 		e.stopPropagation()
 		e.preventDefault()
-		t.save()
+		$('#password').val(Random.id())
 
-Template.adminUserEdit.onCreated ->
-	@user = this.data
+	'submit form': (e, t) ->
+		e.stopPropagation()
+		e.preventDefault()
 
-	@cancel = =>
+		t.save(e.currentTarget)
+
+Template.userEdit.onCreated ->
+	@user = this.data?.user
+
+	@cancel = (form, username) =>
+		form.reset()
+		this.$('input[type=checkbox]').prop('checked', true);
 		if @user
-			RocketChat.TabBar.setTemplate 'adminUserInfo'
-			RocketChat.TabBar.setData @user
-			RocketChat.TabBar.showGroup 'adminusers-selected'
+			@data.back(username)
 		else
 			RocketChat.TabBar.closeFlex()
-			RocketChat.TabBar.showGroup 'adminusers'
 
 	@getUserData = =>
 		userData = { _id: @user?._id }
 		userData.name = s.trim(this.$("#name").val())
 		userData.username = s.trim(this.$("#username").val())
 		userData.email = s.trim(this.$("#email").val())
+		userData.verified = this.$("#verified:checked").length > 0
 		userData.password = s.trim(this.$("#password").val())
 		userData.requirePasswordChange = this.$("#changePassword:checked").length > 0
+		userData.joinDefaultChannels = this.$("#joinDefaultChannels:checked").length > 0
+		userData.sendWelcomeEmail = this.$("#sendWelcomeEmail:checked").length > 0
 		return userData
 
 	@validate = =>
@@ -46,14 +57,14 @@ Template.adminUserEdit.onCreated ->
 		unless userData.username
 			errors.push 'Username'
 		unless userData.email
-			errors.push 'E-mail'
+			errors.push 'Email'
 
 		for error in errors
 			toastr.error(TAPi18n.__('The_field_is_required', TAPi18n.__(error)))
 
 		return errors.length is 0
 
-	@save = =>
+	@save = (form) =>
 		if this.validate()
 			userData = this.getUserData()
 			Meteor.call 'insertOrUpdateUser', userData, (error, result) =>
@@ -62,11 +73,8 @@ Template.adminUserEdit.onCreated ->
 						toastr.success t('User_updated_successfully')
 					else
 						toastr.success t('User_added_successfully')
-						@user = Meteor.users.findOne result
 
-					Meteor.subscribe 'fullUserData', userData.username, 1, =>
-						Session.set 'showUserInfo', @user._id
-						this.cancel()
+					@cancel(form, userData.username)
 
 				if error
-					toastr.error error.reason
+					handleError(error);

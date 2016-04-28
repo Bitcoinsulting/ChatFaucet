@@ -1,9 +1,9 @@
 /* eslint new-cap: [2, {"capIsNewExceptions": ["Match.ObjectIncluding", "Match.Optional"]}] */
 
 Meteor.methods({
-	'livechat:saveCustomField' (_id, customFieldData) {
+	'livechat:saveCustomField'(_id, customFieldData) {
 		if (!Meteor.userId() || !RocketChat.authz.hasPermission(Meteor.userId(), 'view-livechat-manager')) {
-			throw new Meteor.Error('not-authorized');
+			throw new Meteor.Error('error-not-allowed', 'Not allowed', { method: 'livechat:saveCustomField' });
 		}
 
 		if (_id) {
@@ -13,7 +13,7 @@ Meteor.methods({
 		check(customFieldData, Match.ObjectIncluding({ field: String, label: String, scope: String, visibility: String }));
 
 		if (!/^[0-9a-zA-Z-_]+$/.test(customFieldData.field)) {
-			throw new Meteor.Error('error-invalid-custom-field-nmae', 'Invalid custom field name. Use only letters, numbers and dashes.', { method: 'livechat:saveCustomField' });
+			throw new Meteor.Error('error-invalid-custom-field-nmae', 'Invalid custom field name. Use only letters, numbers, hyphens and underscores.', { method: 'livechat:saveCustomField' });
 		}
 
 		if (_id) {

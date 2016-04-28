@@ -6,7 +6,8 @@ Package.describe({
 });
 
 Npm.depends({
-	'iconv-lite': '0.4.13'
+	'iconv-lite': '0.4.13',
+	'ip-range-check': '0.0.1'
 });
 
 Package.onUse(function(api) {
@@ -15,6 +16,7 @@ Package.onUse(function(api) {
 	api.use([
 		'http',
 		'templating',
+		'ecmascript',
 		'coffeescript',
 		'underscore',
 		'konecty:change-case',
@@ -44,6 +46,7 @@ Package.onUse(function(api) {
 
 	api.addFiles('server/server.coffee', 'server');
 	api.addFiles('server/providers.coffee', 'server');
+	api.addFiles('server/jumpToMessage.js', 'server');
 	api.addFiles('server/models/OEmbedCache.coffee', 'server');
 
 	api.export('OEmbed', 'server');

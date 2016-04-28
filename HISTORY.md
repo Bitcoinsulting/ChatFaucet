@@ -1,5 +1,81 @@
 ## NEXT
 
+## 0.28.0, 2016-Apr-25
+
+ - Add "by" and "at" to language files
+ - Add API method to list online users in a room
+ - Add frequently requested nginx example
+ - Add more eslint validations
+ - Add new translation key for cancelling message input Closes #2956
+ - Add twitter and google login eventos for iframe login
+ - Added bad-words npm package and callback file
+ - Added emoji category header in emoji picker
+ - Changed arrow keybinding in message popups
+ - Changes to Email settings (#3007)
+ - Close #1990 Add setting to ignore hosts or CIDR addresses in Embed. (#2953)
+ - Close #2165 Do not notify mentions to people outside of a private group. (#2954)
+ - Close #2675 Changed arrow keybinding in message popups
+ - Close #2726 #2385 Remove double negatives (#2937)
+ - Close #2950 Add setting to disable displaying role tags
+ - Close #3001 Improve user add from admin Set autocomplete off in form tag http://stackoverflow.com/questions/12374442/chrome-browser-ignoring-autocomplete-off
+ - Close #3019 Add data-role attribute to role tags, allowing custom CSS
+ - Close #2940 Fixed formatting
+ - Creat settings to disable displaying role tags
+ - Don't send an email notification to mentioned users not in private group
+ - Faster desktop notifications (#2955)
+ - Fix "Private Group Owner Cannot Rename Group #2807"
+ - Fix _timesync for subfolders
+ - Fix admin user creation via env vars
+ - Fix emojis for subfolder chats
+ - Fix message's cog on tab bar panels
+ - Fix permlink (#3005)
+ - Fix relative assets
+ - Fixing issues related mainly to Code-mirror and RTL (#2960)
+ - Livechat SMS support (#2939)
+ - Notify role change after DB operation
+ - Page to view all livechat sessions (#2965)
+ - Prevent invalid time when TimeSync.serverOffset is undefined
+ - Prevent javascript error on logout
+ - Remove push debug logs
+ - Reply SMS using receipt number as from
+ - Set livechat custom fields with data received from SMS
+ - Show all - RTL fix (#2957)
+ - Use the logo from uploaded assets for the menu footer
+
+## 0.27.0, 2016-Apr-18
+
+- Add admin to default list of allowed roles on 'pin-message' (#2846)
+- Add date/time format settings (#2852)
+- Always set a base URL
+- Auto-translate all languages (#2927)
+- Close #1319 #2701 Add permalink to messages (#2870)
+- Close #2378 Add role tags (#2858)
+- Close #2708 Remove user's avatar from filesystem when deleting the user (#2853)
+- Close #2746 Prevent server crash on wrong S3 configuration (#2851)
+- Close #2829 Add setting for blocking message exclusion (#2933)
+- Close #2887 Support for GET method in @integrations (#2932)
+- Custom OAuth fixes for Reddit (#2921)
+- Do not reset pin-message permission roles on server restart (#2919)
+- Do not set ROOT_URL_PATH_PREFIX based on Site_URL
+- Fix checking room roles
+- Fix error when incoming integration returns nothing
+- Fix for email verification check alignment (RTL) (#2855)
+- Fix for role name being reset on server restart
+- Fix oauth payload method (#2915)
+- Improved message input layout
+- Remove empty link hrefs
+- Remove whitespace around blockquote in message (#2883)
+- Replace arunoda:streams by rocketchat:streamer (#2842)
+- Set pin-message permissions only on insert
+- Several UI improvements
+- Simplify and fix ADMIN_EMAIL verification regex. Fixes RocketChat/Rocket.Chat#2841 (#2890)
+- Trim leading & trailing spaces on username or email at the login form (#2871)
+- Trim username and e-mail in login/registration form (#2888)
+- UI improvements to mentions popup (#2864)
+- Update Vagrantfile. (#2936)
+- Use different color for mentions "all" (#2865)
+- User info tab bar improvements (#2893)
+
 ## 0.26.0, 2016-Apr-11
 
 - Add a download icon to file list (#2817)
