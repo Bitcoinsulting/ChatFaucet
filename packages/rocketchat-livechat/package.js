@@ -27,6 +27,7 @@ Package.onUse(function(api) {
 	api.use('templating', 'client');
 	api.use('http');
 	api.use('mongo');
+	api.use('ddp-rate-limiter');
 	api.use('rocketchat:sms');
 	api.use('less@2.5.1');
 
@@ -116,6 +117,7 @@ Package.onUse(function(api) {
 	api.addFiles('server/methods/saveTrigger.js', 'server');
 	api.addFiles('server/methods/searchAgent.js', 'server');
 	api.addFiles('server/methods/sendMessageLivechat.js', 'server');
+	api.addFiles('server/methods/sendOfflineMessage.js', 'server');
 	api.addFiles('server/methods/setCustomField.js', 'server');
 
 	// models

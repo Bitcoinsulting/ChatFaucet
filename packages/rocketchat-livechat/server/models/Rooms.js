@@ -93,6 +93,18 @@ RocketChat.models.Rooms.findByVisitorToken = function(visitorToken) {
 	return this.find(query);
 };
 
+RocketChat.models.Rooms.findByVisitorId = function(visitorId) {
+	const query = {
+		'v._id': visitorId
+	};
+
+	return this.find(query);
+};
+
 RocketChat.models.Rooms.closeByRoomId = function(roomId) {
 	return this.update({ _id: roomId }, { $unset: { open: 1 } });
+};
+
+RocketChat.models.Rooms.setLabelByRoomId = function(roomId, label) {
+	return this.update({ _id: roomId }, { $set: { label: label } });
 };

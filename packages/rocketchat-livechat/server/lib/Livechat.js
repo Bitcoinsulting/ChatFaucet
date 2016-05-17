@@ -37,17 +37,19 @@ RocketChat.Livechat = {
 				msgs: 1,
 				lm: new Date(),
 				code: roomCode,
+				label: guest.name || guest.username,
 				usernames: [agent.username, guest.username],
 				t: 'l',
 				ts: new Date(),
 				v: {
+					_id: guest._id,
 					token: message.token
 				},
 				open: true
 			}, roomInfo);
 			let subscriptionData = {
 				rid: message.rid,
-				name: guest.username,
+				name: guest.name || guest.username,
 				alert: true,
 				open: true,
 				unread: 1,
@@ -188,5 +190,33 @@ RocketChat.Livechat = {
 		RocketChat.models.Subscriptions.hideByRoomIdAndUserId(room._id, user._id);
 
 		return true;
+	},
+
+	getInitSettings() {
+		let settings = {};
+
+		RocketChat.models.Settings.findNotHiddenPublic([
+			'Livechat_title',
+			'Livechat_title_color',
+			'Livechat_enabled',
+			'Livechat_registration_form',
+			'Livechat_offline_title',
+			'Livechat_offline_title_color',
+			'Livechat_offline_message'
+		]).forEach((setting) => {
+			settings[setting._id] = setting.value;
+		});
+
+		return settings;
+	},
+
+	saveRoomInfo(roomData, guestData) {
+		if (!RocketChat.models.Rooms.saveRoomById(roomData._id, roomData)) {
+			return false;
+		}
+
+		if (!_.isEmpty(guestData.name)) {
+			return RocketChat.models.Rooms.setLabelByRoomId(roomData._id, guestData.name) && RocketChat.models.Subscriptions.updateNameByRoomId(roomData._id, guestData.name);
+		}
 	}
 };
